@@ -1,0 +1,33 @@
+{% extends 'base/base.html' %}
+{% block title %} {{titulo}} {% endblock %}
+ {% block content %}
+
+        {% from '_macro.html' import render_field %}
+        <div class="container col-md-8">
+            <br>
+            <br>
+            <h3 class="text-center" style="color:white;">Registro de Usuario</h3>
+                <form method="POST">
+
+                    <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+
+                        <div class="form-group">
+                                {{render_field(form.username, class='form-control')}}
+                        </div>
+                        <div class="form-group">
+                                {{render_field(form.password, class='form-control')}}
+                        </div>
+                        <div class="form-group">
+                                {{render_field(form.email, class='form-control')}}
+                        </div>
+                        <div class="form-group">
+                                {{render_field(form.submit, class='btn btn-primary')}}
+                        </div>
+                     
+                    </form>
+        </div>
+        
+        
+       
+ {% endblock %}       
+ 
