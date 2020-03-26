@@ -1,0 +1,24 @@
+{% extends 'base/base.html' %}
+{% block title %} Reviews {% endblock %}
+ {% block content %}
+
+        {% from '_macro.html' import render_field %}
+        <div class="container col-md-8">
+            {% if comment_list %}
+                {% for comment in comment_list.items %}
+                <div class="row">
+                    <div class="col-md-8">
+                        <hr>
+                        <h2 class="section-heading">{{comment.username}}</h2>
+                        <h5>{{date_format(comment.created_date)}}</h5>
+                        <p>{{comment.text}}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+        
+       
+ {% endblock %}       
+ 
