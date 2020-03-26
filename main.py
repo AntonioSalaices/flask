@@ -8,7 +8,7 @@ from flask import session
 from flask_wtf import CSRFProtect
 from flask import make_response
 from flask import flash
-from flask import json
+from flask import json, jsonify
 from flask import g
 from config import DevelopmentConfig
 from models import db, User, Comment
@@ -16,7 +16,9 @@ from helper import date_format
 from flask_mail import Mail
 from flask_mail import Message
 import threading
+import os
 from flask import copy_current_request_context
+from flask_marshmallow import Marshmallow
 
 app = Flask(__name__)
 
@@ -24,6 +26,64 @@ app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
 csrf = CSRFProtect()
 mail = Mail()
+ma = Marshmallow()
+
+# Esquema
+class UserSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'username','email', 'password', 'created_date')
+
+# Inicializar esquema
+user_schema = UserSchema()
+users_schema = UserSchema(many=True)
+
+@app.route('/user', methods=['POST'])
+def add():
+    username = request.json['username']
+    email = request.json['email']
+    password = request.json['password']
+
+    new_user = User(username, email, password)
+    db.session.add(new_product)
+    db.session.commit()
+
+    return user_schema.jsonify(new_user)
+
+@app.route('/users', methods=['GET'])
+def get_usuarios():
+    all_usuarios = User.query.all()
+    result = users_schema.dump(all_usuarios)
+    return jsonify(result)
+
+# Obten solo un usuario
+@app.route('/users/<id>', methods=['GET'])
+def get_usuario(id):
+    usuario = User.query.get(id)
+    return user_schema.jsonify(usuario)
+
+# Elimina un usuario
+@app.route('/users/<id>', methods=['DELETE'])
+def delete_usuario(id):
+    usuario = User.query.get(id)
+    db.session.delete(usuario)
+    db.session.commit()
+    return user_schema.jsonify(usuario)
+
+#Actualizar usuario
+@app.route('/users/<id>', methods=['PUT'])
+def update_usuario(id):
+    usuario = User.query.get(id)
+    username = request.json['username']
+    email = request.json['email']
+    password = request.json['password']
+
+    usuario.username =username
+    usuario.email = email
+    usuario.password = password
+
+    db.session.commit()
+
+    return user_schema.jsonify(usuario)
 
 @app.errorhandler(404)
 def page_not_found(e):

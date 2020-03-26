@@ -6,7 +6,7 @@ class Config(object):
     MAIL_USE_SSL= False
     MAIL_USE_TLS= True
     MAIL_USERNAME= 'antonio.salaicesm@gmail.com'
-    MAIL_PASSWORD=''
+    MAIL_PASSWORD='*'
 
 class DevelopmentConfig(Config):
     DEBUG=True
